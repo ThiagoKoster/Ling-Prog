@@ -16,7 +16,7 @@ while(my $row = <$fileHandler>)
     my $store = $+ ; # $+ = last match
     # \G continues regex search from where the last match ocurred
     my ($product) = ($row =~ /\G(.*?)(R\$|\d+\,\d+)/i ); # R$ or numbers followed by . or ,
-    my ($price) = ($row =~ /(R\$\s*\d+[\.?|\,?]\d*\,?)/); # BUG  ===== R$2060 doesnt work, why?
+    my ($price) = ($row =~ /(R\$\s*\d+[\.?|\,?]\d*\,?)/); # BUG  ===== R$ 2060 doesnt work, why? shouldnt \d* treat that?
 
     $promoMatrix[$count][0] = $count;  # id?
     $promoMatrix[$count][1] = $store;
