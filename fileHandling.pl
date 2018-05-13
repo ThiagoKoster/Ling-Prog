@@ -1,38 +1,35 @@
 use warnings; use strict;
 
-my $filename = 'posts.html';
+my $fileName = 'posts.html';
 
+open(my $fileHandler, '<',$fileName) or 
+    die "Could not open file '$fileName' '$!'";
 
-open(my $fh, '<',$filename) or 
-    die "Could not open file '$filename' '$!'";
+my @promoMatrix ; # [ [Id0,Store,Product,Price] , .... , [IdN,Store,Product,Price] ] 
 
-
-
-
-#push @products, [(0)x$numberOfLines] for (0..$numberOfLines);   #id store name
-
-while(my $row = <$fh>)
+my $count = 0 ;
+while(my $row = <$fileHandler>)
 {
     #Return everything inside [ ] or ( ) after first whitespace
-    #[] is $1 and () is $2
+    #my ($store) = ($row =~ /^\d\s\"[\[|\(](.*?)[\]|\)]/gi );
+    $row =~ /^\S\s\"\[(.*?)\]|^\S\s\"\((.*?)\)/gi ;
+    my $store = $+ ; # $+ = last match
+    # \G continues regex search from where the last match ocurred
+    my ($product) = ($row =~ /\G(.*?)(R\$|\d+\,\d+)/i ); # R$ or numbers followed by . or ,
+    my ($price) = ($row =~ /(R\$\s*\d+[\.?|\,?]\d*\,?)/); # BUG  ===== R$2060 doesnt work, why?
 
-    
-    while($row =~ /^\S\s\"\[(.*?)\]|^\S\s\"\((.*?)\)/gi)
-    {
-        #$products[$index][0] = $row =~ /(.*?)/;
-        if($1)
-        {            
-            print "$1\n";
-         #   $products[$index][1] = $1;
-        }
-        if($2)
-        {
-            print "$2\n";
-          #  $products[$index][1] = $1;                 
-        }
-    } 
+    $promoMatrix[$count][0] = $count;  # id?
+    $promoMatrix[$count][1] = $store;
+    $promoMatrix[$count][2] = $product;
+    $promoMatrix[$count][3] = $price;
+    ++$count ;
 }
+
+ for my $i ( 0 .. $#promoMatrix ) { # $#protoMatrix = size of protoMatriz
+     print "\t [ @{$promoMatrix[$i]} ],\n";
+ }
+
 
 print "Done\n";
 #print $products[1][0];
-close $fh;
+close $fileHandler;
