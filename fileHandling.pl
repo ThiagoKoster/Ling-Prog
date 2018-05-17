@@ -48,23 +48,34 @@ sub findPrices
     return $row;
 }
 
+#Subrotine to search for an specific store
+sub searchName
+{   # $name os the name of the store to be found and @matrix is promoMatrix
+    my ($name, @matrix) = @_;
+    my $matrixSize = @matrix;
+
+    for(my $index = 0; $index < $matrixSize; $index++ )
+    {
+        if($matrix[$index][1] =~ /($name)/)
+        {
+            print "achou\n";
+        }
+    }
+
+}
+
 
 #Subrotines end
 
 my $count = 0 ;
 while(my $row = <$fileHandler>)
 {
-    #Return everything inside [ ] or ( ) after first whitespace
-    #my ($store) = ($row =~ /^\d\s\"[\[|\(](.*?)[\]|\)]/gi );
-    #$row =~ /^\S\s\"\[(.*?)\]|^\S\s\"\((.*?)\)/gi ;
     
     $row = findIds($count,$row);
     $row = findStores($count, $row);
     $row = findPrices($count,$row);
     
-    #removeWords($row,@words);
-    # \G continues regex search from where the last match ocurred
-    #my ($product) = ($row =~ /\G(.*?)(R\$|\d+\,\d+)/i ); # R$ or numbers followed by . or ,
+   
     my $product = $row;
     $promoMatrix[$count][2] = $product;
     ++$count ;
@@ -72,6 +83,7 @@ while(my $row = <$fileHandler>)
 
 printProducts();
 
+searchName ("Sub",@promoMatrix);
 
 print "Done\n";
 close $fileHandler;
