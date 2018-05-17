@@ -26,7 +26,7 @@ sub findIds
 {
     my($count,$row) = @_;
     $row =~ s/(^\w*)//gi;
-    $promoMatrix[$count][0] = $&;
+    $promoMatrix[$count][0] = $+;
     return $row;
     
 }
@@ -42,8 +42,9 @@ sub findStores
 sub findPrices
 {
     my ($count,$row) = @_;
-    $row =~ s/\.//;
-    $row =~ s/R\$\s*(\d+[,]*\d{1,9})//;
+    #$row =~ s/\.//;
+    #$row =~ s/R\$\s*(\d+[,]?\d{1,2}|\d+\.\d{3}[,]?\d{1,2}|\d+\.\d{3}).+//;
+    $row =~ s/R\$\s*(\d+[.]?\d+[,]?\d{1,2}).+//;
     $promoMatrix[$count][3] = $+;
     return $row;
 }
@@ -52,9 +53,9 @@ sub findPrices
 sub searchName
 {   # $name os the name of the store to be found and @matrix is promoMatrix
     my ($name, @matrix) = @_;
-    my $matrixSize = @matrix;
+    #my $matrixSize = @matrix;
 
-    for(my $index = 0; $index < $matrixSize; $index++ )
+    for(my $index = 0; $index < $#matrix; $index++ )
     {
         if($matrix[$index][1] =~ /($name)/)
         {
