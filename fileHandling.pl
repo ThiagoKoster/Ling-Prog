@@ -27,7 +27,6 @@ sub printMatrix
             [$matrix[$i][0], $matrix[$i][1], $matrix[$i][2], $matrix[$i][3]]
         );
     }
-
     print $table;
 }
 
@@ -37,7 +36,7 @@ sub findIds
 {
     my($index,$row) = @_;
     $row =~ s/(^\w*)//gi;
-    $promoMatrix[$index][0] = $&;
+    $promoMatrix[$index][ID] = $&;
     return $row;
     
 }
@@ -48,7 +47,7 @@ sub findStores
 {
     my ($index,$row) = @_;
     $row =~ s/^\S*\s\"\[(.*?)\]|^\S*\s\"\((.*?)\)//i; 
-    $promoMatrix[$index][1] = $+;
+    $promoMatrix[$index][STORE] = $+;
     return $row;
 }
 
@@ -62,7 +61,7 @@ sub findPrices
     $row =~ s/R\$\s*(\d+[.]?\d+[,]?\d{1,2}).+//; #searches for R$price and cuts it out of row
     my $price = $+ ; 
     $price =~ s/\.// ; # remove dots from price
-    $promoMatrix[$index][3] = $price;
+    $promoMatrix[$index][PRICE] = $price;
     return $row;
 }
 
@@ -78,39 +77,46 @@ sub generatePromoMatrix
         $row = findPrices($count,$row);
 
         my $product = $row; #after we exclude id,store and price from row all we have left is product
-        $promoMatrix[$count][2] = $product;
+        $promoMatrix[$count][PRODUCT] = $product;
         ++$count ;
     }
 }
 
 #Subrotine to search for substrings in a matrix in a given column  
 #   returns a matrix(promoMatrix format) with the rows that have the given name at given column
-# string, constant, matrix -> 
+# string, constant, matrix -> matrix
 sub searchMatrix
 {
     my ($name,$column, @matrix) = @_;
     my @auxMatrix; 
     for(my $index = 0; $index < $#matrix; $index++ )
     {
-        if($matrix[$index][$column] =~ /($name)/)
+        if($matrix[$index][$column] =~ /($name)/gi) #global and case insensitive
         {
-            print "achou\n";
-            $auxMatrix[$index] = $matrix[$index]; ## <<<<<<<<<<<<<<<<<<<<<<<<<<<<< how to do this????
+            $auxMatrix[$index] = $matrix[$index];
         }
     }
-
+    return @auxMatrix ;
 }
 
 #Subrotines end
 
 
 generatePromoMatrix();
-
 printMatrix(@promoMatrix);
 
-my @matrix = searchMatrix("Sub",STORE,@promoMatrix);
+######## test area #########
 
-printMatrix(@matrix);
+my @matrix = searchMatrix("samsung",PRODUCT,@promoMatrix);
+print "\nForam encontradas as seguintes promocoes contendo Samsung:\n";
+printMatrix(@matrix); ######### BUG ############ does not format correctly
+
+my @matrix = searchMatrix("sub",STORE,@promoMatrix);
+print "\nForam encontradas as seguintes promocoes na loja Submarino:\n";
+printMatrix(@matrix); ######### BUG ############ does not format correctly
+
+
+######## end of test area #########
 
 print "Done\n";
 close $fileHandler;
