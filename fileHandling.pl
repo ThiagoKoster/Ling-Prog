@@ -2,6 +2,7 @@ use Text::Table;
 use warnings; use strict;
 
 my @promoMatrix ; # [ [Id0,Store,Product,Price] , .... , [IdN,Store,Product,Price] ] 
+
 use constant{ # constants to make indexing promoMatrix easier
     ID      => 0,
     STORE   => 1,
@@ -82,6 +83,37 @@ sub generatePromoMatrix
     }
 }
 
+#Subroutine to replace abbreviated store names to correct ones
+#void -> void
+sub replaceStoreNames
+{
+    my %stores = (
+        'sub' => "Submarino",
+        'amaz' => "Amazon",
+        'frio' => "PontoFrio",
+        'fast' => "FastShop",
+        'rapi' => "FastShop",
+        'time' => "ShopTime",
+        'luiza' => "Magazine Luiza",
+        'bahia' => "Casas Bahia",
+        'ricard' => "Ricardo Eletro",
+        'barat' => "SouBarato",
+        'wal' => "Walmart"
+    );
+    my @abbreviations = keys %stores;
+
+    for(my $count = 0; $count < @promoMatrix; $count++ )
+    {
+        foreach my $i (@abbreviations)
+        {
+            if ( index(lc($promoMatrix[$count][STORE]) , $i) > -1) # index(string,substring) returns first position of substring in string, -1 if not found
+            {                                                      # lc(string) returns lowercase string
+                $promoMatrix[$count][STORE] = $stores{$i}; #if abbreviation found replace it by its value in %stores hash
+            }
+        }
+    }
+}
+
 #Subrotine to search for substrings in a matrix in a given column  
 #   returns a matrix(promoMatrix format) with rows that have the given name at given column
 # string, constant, matrix -> matrix
@@ -104,7 +136,7 @@ sub searchNameInMatrix
 #Subroutine to search for products higher or smaller than given price
 #   returns a matrix(promoMatrix format) with rows that meet the price option
 # float, int , matrix -> matrix
-sub searchPriceInMatrix ###### BUG ######## Argument "2699,00" isn't numeric in numeric, fix by replacing commas by dots?
+sub searchPriceInMatrix ###### BUG ######## Argument "2699,00" isn't numeric in numeric, fix by replacing commas to dots?
 {
     my ($price,$option, @matrix) = @_ ; #option = 0 for <= | option = 1 for >=
     my @auxMatrix;
@@ -141,43 +173,13 @@ sub searchPriceInMatrix ###### BUG ######## Argument "2699,00" isn't numeric in 
     return @auxMatrix;
 }
 
-sub correctStoreNames
-{
-    my %stores = (
-        'sub' => "Submarino",
-        'amaz' => "Amazon",
-        'frio' => "PontoFrio",
-        'fast' => "FastShop",
-        'rapi' => "FastShop",
-        'time' => "ShopTime",
-        'luiza' => "Magazine Luiza",
-        'bahia' => "Casas Bahia",
-        'ricard' => "Ricardo Eletro",
-        'barat' => "SouBarato",
-        'wal' => "Walmart"
-    );
-    my @abbreviations = keys %stores;
-
-    for(my $count = 0; $count < @promoMatrix; $count++ )
-    {
-        foreach my $i (@abbreviations)
-        {
-            if ( index(lc($promoMatrix[$count][STORE]) , $i) > -1) # index(string,substring) returns first position of substring in string, -1 if not found
-            {                                                      # lc(string) returns lowercase string
-                $promoMatrix[$count][STORE] = $stores{$i}; #if abbreviation found replace it by its value in %stores hash
-            }
-        }
-    }
-}
-
-
 #Subrotines end
 
 
 ######## test area #########
 
 generatePromoMatrix();
-correctStoreNames();
+replaceStoreNames();
 printMatrix(@promoMatrix);
 
 my @matrix = searchNameInMatrix("samsung",PRODUCT,@promoMatrix);
