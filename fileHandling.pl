@@ -16,12 +16,12 @@ open(my $fileHandler, '<',$fileName) or
 #Subrotines
 
 #Prints a matrix in promoMatrix format
-# matrix(protoMatrix format) -> void
+# matrix(promoMatrix format) -> void
 sub printMatrix
 {
     my(@matrix) = @_ ;
     my $table = Text::Table ->new("Id", "Store", "Product", "Price");
-    for my $i (0 .. $#matrix)
+    for my $i (0 .. @matrix)
     {
         $table->load(
             [$matrix[$i][0], $matrix[$i][1], $matrix[$i][2], $matrix[$i][3]]
@@ -83,38 +83,115 @@ sub generatePromoMatrix
 }
 
 #Subrotine to search for substrings in a matrix in a given column  
-#   returns a matrix(promoMatrix format) with the rows that have the given name at given column
+#   returns a matrix(promoMatrix format) with rows that have the given name at given column
 # string, constant, matrix -> matrix
-sub searchMatrix
+sub searchNameInMatrix
 {
     my ($name,$column, @matrix) = @_;
-    my @auxMatrix; 
-    for(my $index = 0; $index < $#matrix; $index++ )
+    my @auxMatrix;
+    my $count = 0; 
+    for(my $index = 0; $index < @matrix; $index++ )
     {
         if($matrix[$index][$column] =~ /($name)/gi) #global and case insensitive
         {
-            $auxMatrix[$index] = $matrix[$index];
+            $auxMatrix[$count] = $matrix[$index];
+            ++$count;
         }
     }
     return @auxMatrix ;
 }
 
+#Subroutine to search for products higher or smaller than given price
+#   returns a matrix(promoMatrix format) with rows that meet the price option
+# float, int , matrix -> matrix
+sub searchPriceInMatrix ###### BUG ######## Argument "2699,00" isn't numeric in numeric, fix by replacing commas by dots?
+{
+    my ($price,$option, @matrix) = @_ ; #option = 0 for <= | option = 1 for >=
+    my @auxMatrix;
+    my $count = 0;
+    if ($option == 0)
+    {
+        for(my $index = 0; $index < @matrix; $index++ )
+        {
+            if($matrix[$index][PRICE] <= $price) 
+            {
+                $auxMatrix[$count] = $matrix[$index];
+                ++$count;
+            }
+        }
+    }
+    elsif ($option == 1)
+    {
+        for(my $index = 0; $index < @matrix; $index++ )
+        {
+            if($matrix[$index][PRICE] >= $price) 
+            {
+                $auxMatrix[$count] = $matrix[$index];
+                ++$count;
+            }
+        }
+    }
+    else
+    {
+        print "ERROR : Unspecified option, chose 0 for lower than price\n";
+        print "\t or 1 for higher than price";
+        return 0;
+    }
+
+    return @auxMatrix;
+}
+
+sub correctStoreNames
+{
+    my %stores = (
+        'sub' => "Submarino",
+        'amaz' => "Amazon",
+        'frio' => "PontoFrio",
+        'fast' => "FastShop",
+        'rapi' => "FastShop",
+        'time' => "ShopTime",
+        'luiza' => "Magazine Luiza",
+        'bahia' => "Casas Bahia",
+        'ricard' => "Ricardo Eletro",
+        'barat' => "SouBarato",
+        'wal' => "Walmart"
+    );
+    my @abbreviations = keys %stores;
+
+    for(my $count = 0; $count < @promoMatrix; $count++ )
+    {
+        foreach my $i (@abbreviations)
+        {
+            if ( index(lc($promoMatrix[$count][STORE]) , $i) > -1) # index(string,substring) returns first position of substring in string, -1 if not found
+            {                                                      # lc(string) returns lowercase string
+                $promoMatrix[$count][STORE] = $stores{$i}; #if abbreviation found replace it by its value in %stores hash
+            }
+        }
+    }
+}
+
+
 #Subrotines end
 
 
-generatePromoMatrix();
-printMatrix(@promoMatrix);
-
 ######## test area #########
 
-my @matrix = searchMatrix("samsung",PRODUCT,@promoMatrix);
+generatePromoMatrix();
+correctStoreNames();
+printMatrix(@promoMatrix);
+
+my @matrix = searchNameInMatrix("samsung",PRODUCT,@promoMatrix);
 print "\nForam encontradas as seguintes promocoes contendo Samsung:\n";
-printMatrix(@matrix); ######### BUG ############ does not format correctly
+printMatrix(@matrix);
 
-my @matrix = searchMatrix("sub",STORE,@promoMatrix);
+@matrix = searchNameInMatrix("sub",STORE,@promoMatrix);
 print "\nForam encontradas as seguintes promocoes na loja Submarino:\n";
-printMatrix(@matrix); ######### BUG ############ does not format correctly
+printMatrix(@matrix);
 
+##### BUG ###### Works but trhow errors at our face
+#@matrix = searchPriceInMatrix(1100,1,@promoMatrix);
+#print "\nForam encontradas as seguintes promocoes acima de R\$1100:\n";
+#printMatrix(@matrix); 
 
 ######## end of test area #########
 
