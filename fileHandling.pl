@@ -1,13 +1,15 @@
 use Text::Table;
 use warnings; use strict;
 
-my @promoMatrix ; # [ [Id0,Store,Product,Price] , .... , [IdN,Store,Product,Price] ] 
+my @promoMatrix ; # [ [Id0,Store,Product,Price,Responses,Views] , .... , [Id0,Store,Product,Price,Responses,Views] ] 
 
 use constant{ # constants to make indexing promoMatrix easier
     ID      => 0,
     STORE   => 1,
     PRODUCT => 2,
     PRICE   => 3,
+    RESPONSES => 4,
+    VIEWS => 5,
 };
 
 my $fileName = 'posts.html';
@@ -21,11 +23,11 @@ open(my $fileHandler, '<',$fileName) or
 sub printMatrix
 {
     my(@matrix) = @_ ;
-    my $table = Text::Table ->new("Id", "Store", "Product", "Price");
+    my $table = Text::Table ->new("Id", "Store", "Product", "Price", "Responses", "Views");
     for my $i (0 .. @matrix)
     {
         $table->load(
-            [$matrix[$i][0], $matrix[$i][1], $matrix[$i][2], $matrix[$i][3]]
+            [$matrix[$i][0], $matrix[$i][1], $matrix[$i][2], $matrix[$i][3], $matrix[$i][4], $matrix[$i][5]]
         );
     }
     print $table;
@@ -33,6 +35,23 @@ sub printMatrix
 
 #Searches for id ; If found includes it on promoMatrix at the correct position, and returns the string without it
 #int , string -> string without Id
+
+sub findResponses
+{
+    my($index,$row) = @_;
+    $row =~ /'.*?'\s(\d*)/;
+    $promoMatrix[$index][RESPONSES] = $+;
+    return $row;
+}
+
+sub findViews
+{
+    my($index,$row) = @_;
+    $row =~ /'.*?'\s\d*\s(\d*)/;
+    $promoMatrix[$index][VIEWS] = $+;
+    return $row;
+}
+
 sub findIds
 {
     my($index,$row) = @_;
@@ -47,7 +66,7 @@ sub findIds
 sub findStores 
 {
     my ($index,$row) = @_;
-    $row =~ s/^\S*\s\"\[(.*?)\]|^\S*\s\"\((.*?)\)//i; 
+    $row =~ s/^\S*\s\'\[(.*?)\]|^\S*\s\'\((.*?)\)//i; 
     $promoMatrix[$index][STORE] = $+;
     return $row;
 }
@@ -73,6 +92,8 @@ sub generatePromoMatrix
     my $count = 0 ;
     while(my $row = <$fileHandler>)
     {
+        $row = findResponses($count,$row);
+        $row = findViews($count,$row);
         $row = findIds($count,$row);
         $row = findStores($count, $row);
         $row = findPrices($count,$row);
@@ -173,6 +194,46 @@ sub searchPriceInMatrix ###### BUG ######## Argument "2699,00" isn't numeric in 
     return @auxMatrix;
 }
 
+sub mostResponses
+{
+    my(@matrix) = @_;
+    my @auxMatrix;
+    my $maxResp = 0;
+    my $count = 0;
+     for(my $index = 0; $index < @matrix; $index++ )
+    {
+        my $numResponse = $matrix[$index][RESPONSES];
+        if($numResponse >= $maxResp)
+        {
+            $maxResp = $numResponse;
+            $auxMatrix[0] = $matrix[$index];
+            #$count++;
+        }
+        
+    }
+    return @auxMatrix;
+}
+
+sub mostViews
+{
+    my(@matrix) = @_;
+    my @auxMatrix;
+    my $maxViews = 0;
+    my $count = 0;
+     for(my $index = 0; $index < @matrix; $index++ )
+    {
+        my $numViews = $matrix[$index][VIEWS];
+        if($numViews >= $maxViews)
+        {
+            $maxViews = $numViews;
+            $auxMatrix[0] = $matrix[$index];
+            #$count++;
+        }
+        
+    }
+    return @auxMatrix;
+}
+
 #Subrotines end
 
 
@@ -188,6 +249,14 @@ printMatrix(@matrix);
 
 @matrix = searchNameInMatrix("sub",STORE,@promoMatrix);
 print "\nForam encontradas as seguintes promocoes na loja Submarino:\n";
+printMatrix(@matrix);
+
+@matrix = mostResponses(@promoMatrix);
+print "\nPromocao mais comentada\n";
+printMatrix(@matrix);
+
+@matrix = mostViews(@promoMatrix);
+print "\nPromocao mais vista\n";
 printMatrix(@matrix);
 
 ##### BUG ###### Works but trhow errors at our face
