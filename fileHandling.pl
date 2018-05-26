@@ -199,12 +199,27 @@ sub searchPriceInMatrix ###### BUG ######## Argument "2699,00" isn't numeric in 
     return @auxMatrix;
 }
 
+#Subroutine to search for products in a price ranger
+# float, float , matrix -> matrix
+sub searchPriceRangeInMatrix
+{
+    my ($minPrice,$maxPrice,@matrix) = @_;
+    my @auxMatrix;
+    if( ($minPrice >= $maxPrice) | ($maxPrice < $minPrice) ) 
+    {
+        print "ERROR: The price Range is wrong\n";
+    }
+    @auxMatrix = searchPriceInMatrix($maxPrice,0,@matrix); # lower than max price
+    @auxMatrix = searchPriceInMatrix($minPrice,1,@auxMatrix); # higher than min price
+
+    return @auxMatrix;    
+}
+
 #Subroutines to find the row with the most items in the given column
-# int,matrix > list
+# int,matrix > array
 sub findMostInColumn
 {
     my($column,@matrix) = @_;
-    my @auxMatrix;
     my $maxInColumn = 0;
     my $count = 0;
     for(my $index = 0; $index <@matrix; $index++)
@@ -216,8 +231,7 @@ sub findMostInColumn
             $count = $index;
         }
     }
-    $auxMatrix[0] = $matrix[$count];
-    return @auxMatrix;
+    return $matrix[$count];
 }
 
 #Subrotines end
@@ -250,6 +264,9 @@ printMatrix(@matrix);
 print "\nForam encontradas as seguintes promocoes acima de R\$1100:\n";
 printMatrix(@matrix); 
 
+print "\nForam encontradas as seguintes promocoes acima de R\$2100 e abaixo de R\$3000:\n";
+@matrix = searchPriceRangeInMatrix(2100,3000,@promoMatrix);
+printMatrix(@matrix); 
 ######## end of test area #########
 
 print "Done\n";
