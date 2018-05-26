@@ -1,5 +1,6 @@
 use Text::Table;
-use warnings; use strict;
+#use warnings; 
+use strict;
 
 my @promoMatrix ; # [ [Id0,Store,Product,Price,Responses,Views] , .... , [Id0,Store,Product,Price,Responses,Views] ] 
 
@@ -33,8 +34,8 @@ sub printMatrix
     print $table;
 }
 
-#Searches for id ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string -> string without Id
+#Searches for number os Responses ; If found includes it on promoMatrix at the correct position, and returns the string without it
+#int , string -> string 
 
 sub findResponses
 {
@@ -44,6 +45,8 @@ sub findResponses
     return $row;
 }
 
+#Searches for number os Responses ; If found includes it on promoMatrix at the correct position, and returns the string without it
+#int , string -> string
 sub findViews
 {
     my($index,$row) = @_;
@@ -52,6 +55,8 @@ sub findViews
     return $row;
 }
 
+#Searches for id ; If found includes it on promoMatrix at the correct position, and returns the string without it
+#int , string -> string without Id
 sub findIds
 {
     my($index,$row) = @_;
@@ -194,43 +199,24 @@ sub searchPriceInMatrix ###### BUG ######## Argument "2699,00" isn't numeric in 
     return @auxMatrix;
 }
 
-sub mostResponses
+#Subroutines to find the row with the most items in the given column
+# int,matrix > list
+sub findMostInColumn
 {
-    my(@matrix) = @_;
+    my($column,@matrix) = @_;
     my @auxMatrix;
-    my $maxResp = 0;
+    my $maxInColumn = 0;
     my $count = 0;
-     for(my $index = 0; $index < @matrix; $index++ )
+    for(my $index = 0; $index <@matrix; $index++)
     {
-        my $numResponse = $matrix[$index][RESPONSES];
-        if($numResponse >= $maxResp)
+        my $numInColumn = $matrix[$index][$column] ;
+        if( $numInColumn >= $maxInColumn)
         {
-            $maxResp = $numResponse;
-            $auxMatrix[0] = $matrix[$index];
-            #$count++;
+            $maxInColumn = $numInColumn;
+            $count = $index;
         }
-        
     }
-    return @auxMatrix;
-}
-
-sub mostViews
-{
-    my(@matrix) = @_;
-    my @auxMatrix;
-    my $maxViews = 0;
-    my $count = 0;
-     for(my $index = 0; $index < @matrix; $index++ )
-    {
-        my $numViews = $matrix[$index][VIEWS];
-        if($numViews >= $maxViews)
-        {
-            $maxViews = $numViews;
-            $auxMatrix[0] = $matrix[$index];
-            #$count++;
-        }
-        
-    }
+    $auxMatrix[0] = $matrix[$count];
     return @auxMatrix;
 }
 
@@ -251,18 +237,18 @@ printMatrix(@matrix);
 print "\nForam encontradas as seguintes promocoes na loja Submarino:\n";
 printMatrix(@matrix);
 
-@matrix = mostResponses(@promoMatrix);
+@matrix = findMostInColumn(RESPONSES,@promoMatrix);
 print "\nPromocao mais comentada\n";
 printMatrix(@matrix);
 
-@matrix = mostViews(@promoMatrix);
+@matrix = findMostInColumn(VIEWS,@promoMatrix);
 print "\nPromocao mais vista\n";
 printMatrix(@matrix);
 
 ##### BUG ###### Works but trhow errors at our face
-#@matrix = searchPriceInMatrix(1100,1,@promoMatrix);
-#print "\nForam encontradas as seguintes promocoes acima de R\$1100:\n";
-#printMatrix(@matrix); 
+@matrix = searchPriceInMatrix(1100,1,@promoMatrix);
+print "\nForam encontradas as seguintes promocoes acima de R\$1100:\n";
+printMatrix(@matrix); 
 
 ######## end of test area #########
 
