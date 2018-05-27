@@ -36,9 +36,28 @@ sub printMatrix
     print $table;
 }
 
+#Prints the first N lines of a matrix
+# matrix -> void
+sub printNLinesInMatrix
+{
+    my ($numLines, @matrix) = @_;
+    my @auxMatrix;
+    if($numLines > @matrix)
+    {
+        print "ERROR : N > matrix size";
+    }
+    else
+    {
+        for(my $line = 0; $line < $numLines; $line++)
+            {
+                $auxMatrix[$line] = $matrix[$line]; 
+            }
+        printMatrix(@auxMatrix);
+    }
+}
+
 #Searches for number os Responses ; If found includes it on promoMatrix at the correct position, and returns the string without it
 #int , string -> string 
-
 sub findResponses
 {
     my($index,$row) = @_;
@@ -234,19 +253,6 @@ sub findMostInColumn
         }
     }
     return $matrix[$count];
-}
-
-sub printNLinesInMatrix
-{
-    my ($numLines, @matrix) = @_;
-    my @auxMatrix;
-
-    for(my $line = 0; $line < $numLines; $line++)
-    {
-        $auxMatrix[$line] = $matrix[$line]; 
-    }
-
-    printMatrix(@auxMatrix);
 }
 
 #Subrotines end
