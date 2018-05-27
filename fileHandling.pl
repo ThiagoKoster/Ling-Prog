@@ -42,6 +42,7 @@ sub printNLinesInMatrix
 {
     my ($numLines, @matrix) = @_;
     my @auxMatrix;
+
     if($numLines > @matrix)
     {
         print "ERROR : N > matrix size";
@@ -229,11 +230,14 @@ sub searchPriceRangeInMatrix
     if( ($minPrice >= $maxPrice) | ($maxPrice < $minPrice) ) 
     {
         print "ERROR: The price Range is wrong\n";
+        return 0;
     }
-    @auxMatrix = searchPriceInMatrix($maxPrice,0,@matrix); # lower than max price
-    @auxMatrix = searchPriceInMatrix($minPrice,1,@auxMatrix); # higher than min price
-
-    return @auxMatrix;    
+    else
+    {
+        @auxMatrix = searchPriceInMatrix($maxPrice,0,@matrix); # lower than max price
+        @auxMatrix = searchPriceInMatrix($minPrice,1,@auxMatrix); # higher than min price
+        return @auxMatrix;
+    }    
 }
 
 #Subroutines to find the row with the most items in the given column
