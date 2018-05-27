@@ -126,6 +126,7 @@ sub generatePromoMatrix
         $row = findPrices($count,$row);
 
         my $product = $row; #after we exclude id,store and price from row all we have left is product
+        $product =~ s/\s([\-]|por)\s$//i; # remove - and por at end of $product string
         $promoMatrix[$count][PRODUCT] = $product;
         ++$count ;
     }
