@@ -23,9 +23,11 @@ open(my $fileHandler, '<',$fileName) or
 # matrix(promoMatrix format) -> void
 sub printMatrix
 {
-    my(@matrix) = @_ ;
+    my (@matrix) = @_;
+    
     my $table = Text::Table ->new("Id", "Store", "Product", "Price", "Responses", "Views");
-    for my $i (0 .. @matrix)
+
+     for my $i (0 .. @matrix)
     {
         $table->load(
             [$matrix[$i][0], $matrix[$i][1], $matrix[$i][2], $matrix[$i][3], $matrix[$i][4], $matrix[$i][5]]
@@ -97,8 +99,8 @@ sub generatePromoMatrix
     my $count = 0 ;
     while(my $row = <$fileHandler>)
     {
-        $row = findResponses($count,$row);
         $row = findViews($count,$row);
+        $row = findResponses($count,$row);
         $row = findIds($count,$row);
         $row = findStores($count, $row);
         $row = findPrices($count,$row);
@@ -162,7 +164,7 @@ sub searchNameInMatrix
 #Subroutine to search for products higher or smaller than given price
 #   returns a matrix(promoMatrix format) with rows that meet the price option
 # float, int , matrix -> matrix
-sub searchPriceInMatrix ###### BUG ######## Argument "2699,00" isn't numeric in numeric, fix by replacing commas to dots?
+sub searchPriceInMatrix 
 {
     my ($price,$option, @matrix) = @_ ; #option = 0 for <= | option = 1 for >=
     my @auxMatrix;
@@ -234,6 +236,19 @@ sub findMostInColumn
     return $matrix[$count];
 }
 
+sub printNLinesInMatrix
+{
+    my ($numLines, @matrix) = @_;
+    my @auxMatrix;
+
+    for(my $line = 0; $line < $numLines; $line++)
+    {
+        $auxMatrix[$line] = $matrix[$line]; 
+    }
+
+    printMatrix(@auxMatrix);
+}
+
 #Subrotines end
 
 
@@ -259,14 +274,20 @@ printMatrix(@matrix);
 print "\nPromocao mais vista\n";
 printMatrix(@matrix);
 
-##### BUG ###### Works but trhow errors at our face
 @matrix = searchPriceInMatrix(1100,1,@promoMatrix);
 print "\nForam encontradas as seguintes promocoes acima de R\$1100:\n";
+printMatrix(@matrix); 
+
+@matrix = searchPriceInMatrix(1100,0,@promoMatrix);
+print "\nForam encontradas as seguintes promocoes abaixo de R\$1100:\n";
 printMatrix(@matrix); 
 
 print "\nForam encontradas as seguintes promocoes acima de R\$2100 e abaixo de R\$3000:\n";
 @matrix = searchPriceRangeInMatrix(2100,3000,@promoMatrix);
 printMatrix(@matrix); 
+
+print ("\n4 primeiras promocoes:\n");
+printNLinesInMatrix(4,@promoMatrix);
 ######## end of test area #########
 
 print "Done\n";
