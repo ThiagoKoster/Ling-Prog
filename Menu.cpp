@@ -28,3 +28,7 @@ void Menu::askMenuOption(){
 int Menu::getMenuOption() const {
     return menuOption;   
 }
+
+void Menu::callFunction() const{
+    (*functions[ this->menuOption ])(this->menuOption);
+}
