@@ -11,7 +11,9 @@ Possible to-dos :
 
 #IMPORTANT
 Create "keys.txt" file in the project folder with the values of your ConsumerKey,ConsumerSecret,OAuthAccessTokenKey and OAuthAccessTokenSecret each at one line
-To compile use "g++ -Wall main.cpp -o main -ltwitcurl"
 
-sudo apt install nlohmann-json-dev
 
+Baixar o curl:
+sudo apt-get install libcurl3 libcurl4-openssl-dev
+baixar biblioteca para json:
+sudo apt-get install nlohmann-json-dev 
