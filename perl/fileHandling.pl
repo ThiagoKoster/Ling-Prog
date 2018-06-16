@@ -1,9 +1,6 @@
 use Text::Table;
 #use warnings; 
 use strict;
-
-my @promoMatrix ; # [ [Id0,Store,Product,Price,Responses,Views] , .... , [Id0,Store,Product,Price,Responses,Views] ] 
-
 use constant{ # constants to make indexing promoMatrix easier
     ID      => 0,
     STORE   => 1,
@@ -12,10 +9,6 @@ use constant{ # constants to make indexing promoMatrix easier
     RESPONSES => 4,
     VIEWS => 5,
 };
-
-my $fileName = 'posts.html';
-open(my $fileHandler, '<',$fileName) or 
-    die "Could not open file '$fileName' '$!'";
 
 #Subrotines
 
@@ -58,84 +51,93 @@ sub printNLinesInMatrix
 }
 
 #Searches for number os Responses ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string -> string 
+#int , string, $promoMatrixReference -> string 
 sub findResponses
 {
-    my($index,$row) = @_;
+    my($index,$row,$promoMatrixRef) = @_;
     $row =~ /'.*?'\s(\d*)/;
-    $promoMatrix[$index][RESPONSES] = $+;
+    $$promoMatrixRef[$index][RESPONSES] = $+;
     return $row;
 }
 
-#Searches for number os Responses ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string -> string
+#Searches for number os views ; If found includes it on promoMatrix at the correct position, and returns the string without it
+#int , string, $promoMatrixReference -> string
 sub findViews
 {
-    my($index,$row) = @_;
+    my($index,$row,$promoMatrixRef) = @_;
     $row =~ /'.*?'\s\d*\s(\d*)/;
-    $promoMatrix[$index][VIEWS] = $+;
+    $$promoMatrixRef[$index][VIEWS] = $+;
     return $row;
 }
 
 #Searches for id ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string -> string without Id
+#int , string, $promoMatrixReference -> string without Id
 sub findIds
 {
-    my($index,$row) = @_;
+    my($index,$row,$promoMatrixRef) = @_;
     $row =~ s/(^\w*)//gi;
-    $promoMatrix[$index][ID] = $&;
+    $$promoMatrixRef[$index][ID] = $&;
     return $row;
     
 }
 
 #Searches for (store) or [store] ; If found includes it on promoMatrix at the correct position, and returns the string without it
-# int, string -> string without store name
+# int, string, $promoMatrixReference -> string without store name
 sub findStores 
 {
-    my ($index,$row) = @_;
+    my ($index,$row,$promoMatrixRef) = @_;
     $row =~ s/^\S*\s\'\[(.*?)\]|^\S*\s\'\((.*?)\)//i; 
-    $promoMatrix[$index][STORE] = $+;
+    $$promoMatrixRef[$index][STORE] = $+;
     return $row;
 }
 
 #Searches for R$ price ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string -> string without price and everything after it
+#int , string, $promoMatrixReference -> string without price and everything after it
 sub findPrices
 {
-    my ($index,$row) = @_;
+    my ($index,$row,$promoMatrixRef) = @_;
     #$row =~ s/\.//;
     #$row =~ s/R\$\s*(\d+[,]?\d{1,2}|\d+\.\d{3}[,]?\d{1,2}|\d+\.\d{3}).+//;
     $row =~ s/R\$\s*(\d+[.]?\d+[,]?\d{1,2}).+//; #searches for R$price and cuts it out of row
     my $price = $+ ; 
     $price =~ s/\.// ; # remove dots from price
-    $promoMatrix[$index][PRICE] = $price;
+    $$promoMatrixRef[$index][PRICE] = $price;
     return $row;
 }
 
-#Generates promoMatrix from the txt file
-# void -> void
+#Generates promoMatrix from the file name given, return a 2 dimensional array in promoMatrix format
+# string -> promoMatrix
 sub generatePromoMatrix
-{
+{   
+    my ($fileName) = @_;
+    open(my $fileHandler, '<',$fileName) or 
+        die "Could not open file '$fileName' '$!'";
+
+    my @promoMatrix ; # [ [Id0,Store,Product,Price,Responses,Views] , .... , [Id0,Store,Product,Price,Responses,Views] ] 
     my $count = 0 ;
     while(my $row = <$fileHandler>)
     {
-        $row = findViews($count,$row);
-        $row = findResponses($count,$row);
-        $row = findIds($count,$row);
-        $row = findStores($count, $row);
-        $row = findPrices($count,$row);
+        $row = findViews($count,$row,\@promoMatrix); # \@promoMatrix = Reference to @promoMatrix
+        $row = findResponses($count,$row,\@promoMatrix);
+        $row = findIds($count,$row,\@promoMatrix);
+        $row = findStores($count, $row,\@promoMatrix);
+        $row = findPrices($count,$row,\@promoMatrix);
 
         my $product = $row; #after we exclude id,store and price from row all we have left is product
         $product =~ s/\s([\-]|por)\s$//i; # remove - and por at end of $product string
         $promoMatrix[$count][PRODUCT] = $product;
         ++$count ;
     }
+    close $fileHandler;
+    replaceStoreNames(\@promoMatrix); # \@promoMatrix = Reference to @promoMatrix
+    return @promoMatrix;
 }
 
 #Subroutine to replace abbreviated store names to correct ones
-#void -> void
+# $promoMatrixReference -> void
 sub replaceStoreNames
 {
+    my ($promoMatrixRef) = @_;
     my %stores = (
         'sub' => "Submarino",
         'amaz' => "Amazon",
@@ -151,13 +153,13 @@ sub replaceStoreNames
     );
     my @abbreviations = keys %stores;
 
-    for(my $count = 0; $count < @promoMatrix; $count++ )
+    for(my $count = 0; $count < @$promoMatrixRef; $count++ )
     {
         foreach my $i (@abbreviations)
         {
-            if ( index(lc($promoMatrix[$count][STORE]) , $i) > -1) # index(string,substring) returns first position of substring in string, -1 if not found
+            if ( index(lc($$promoMatrixRef[$count][STORE]) , $i) > -1) # index(string,substring) returns first position of substring in string, -1 if not found
             {                                                      # lc(string) returns lowercase string
-                $promoMatrix[$count][STORE] = $stores{$i}; #if abbreviation found replace it by its value in %stores hash
+                $$promoMatrixRef[$count][STORE] = $stores{$i}; #if abbreviation found replace it by its value in %stores hash
             }
         }
     }
@@ -224,7 +226,7 @@ sub searchPriceInMatrix
 
 #Subroutine to search for products in a price ranger
 # float, float , matrix -> matrix
-sub searchPriceRangeInMatrix
+sub searchPriceRangeInMatrix 
 {
     my ($minPrice,$maxPrice,@matrix) = @_;
     my @auxMatrix;
@@ -264,9 +266,7 @@ sub findMostInColumn
 
 
 ######## test area #########
-
-generatePromoMatrix();
-replaceStoreNames();
+my @promoMatrix = generatePromoMatrix("posts.html");
 printMatrix(@promoMatrix);
 
 my @matrix = searchNameInMatrix("samsung",PRODUCT,@promoMatrix);
@@ -302,4 +302,3 @@ printNLinesInMatrix(4,@promoMatrix);
 ######## end of test area #########
 
 print "Done\n";
-close $fileHandler;

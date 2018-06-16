@@ -1,26 +1,36 @@
 #include <iostream>
+#include <iomanip>
 #include "Menu.h"
 
 using namespace std;
 
-void Menu::printMenu() {
-    cout << "######################### Menu ##################################" << endl;
-    cout << "1 - " << endl;
-    cout << "2 - " << endl;
-    cout << "3 - " << endl;
-    cout << "4 - " << endl;
-    cout << "5 - " << endl;
+void Menu::printMenu () const{
+    cout << "######################### Menu #########################" << endl;
+    cout << "1 - Promocoes mais recentes " << endl;
+    cout << "2 - Pesquisar promocoes por nome de produto " << endl;
+    cout << "3 - Pesquisar promocoes por loja " << endl;
+    cout << "4 - Pesquisar promocoes por preco " << endl;
+    cout << "5 - Pensar o que colocar aqui " << endl;
     cout << "0 - Sair do programa" << endl;
-    
-    cout << "######################### Menu ##################################" << endl;
+    cout << "######################### Menu #########################" << endl;
 }
+
 
 void Menu::askMenuOption(){
-    cout << "Escolha sua opção" << endl;
-    cin >> choosedItem;
+    cout << "Escolha sua opcao : ";
+    cin >> menuOption;
+    while ( cin.fail() || menuOption > 5 || menuOption< 0){
+        cout << "Opcaoo invalida. Escolha uma opcao entre 0 e 5 :" ;
+        cin.clear(); // clears cin fail flag
+        cin.ignore(1000,'\n'); // clear in stream
+        cin >> menuOption;
+    }
 }
 
-int Menu::getMenuOption()
-{
-    return choosedItem;   
+int Menu::getMenuOption() const {
+    return menuOption;   
+}
+
+void Menu::callFunction() const{
+    (*functions[menuOption])(menuOption);
 }
