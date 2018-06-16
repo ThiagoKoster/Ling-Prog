@@ -4,7 +4,7 @@
 using namespace std;
 
 void exitProgram(int z){
-    cout << "Digitado " << z << ", Saindo do programa... Pressione Enter" << endl;
+    cout << "Digitado " << z << ", Saindo do programa..." << endl;
 }
 
 void f1(int a){
