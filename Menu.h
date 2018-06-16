@@ -1,10 +1,10 @@
 class Menu{
     public:
-        Menu(int item= -1) : choosedItem(item){}
-         void printMenu();
-         void askMenuOption();
-         int getMenuOption();
+        Menu(int option= -1) : menuOption(option){}
+        void printMenu() const;
+        int getMenuOption() const;
+        void askMenuOption();        
     private:
-         int choosedItem;
+        int menuOption;
 
 };
