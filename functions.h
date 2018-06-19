@@ -1,8 +1,12 @@
-void exitProgram(int);
-void f1(int);
-void f2(int);
-void f3(int);
-void f4(int);
-void f5(int);
+#include <string>
+
+using namespace std;
+
+void showRecentPromotions(string);
+void searchProduct(string);
+void searchStore(string);
+void searchPrice(string);
+void showHardmob(string);
+void showAdrenaline(string);
 
 void clear(void);

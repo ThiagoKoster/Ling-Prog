@@ -1,28 +1,29 @@
 #include <iostream>
+#include <string>
 #include "functions.h"
 
 using namespace std;
 
-void exitProgram(int z){
-    cout << "Digitado " << z << ", Saindo do programa..." << endl;
+void showRecentPromotions(string num){
+    cout << "Ultimas " << num << " promocoes : "<< endl;
 }
 
-void f1(int a){
-    cout << "Digitado " << a << ", funcao 1 chamada" << endl;
+void searchProduct(string product){
+    cout << "Promocoes contendo produto -"<< product << "- encontadas: " << endl;
 }
 
-void f2(int b){
-    cout << "Digitado " << b << ", funcao 2 chamada" << endl;
+void searchStore(string store){
+    cout << "Promocoes na loja -"<< store << "- encontradas: " << endl;
 }
 
-void f3(int c){
-    cout << "Digitado " << c << ", funcao 3 chamada" << endl;
+void searchPrice(string maxPrice){
+    cout << "Promocoes com valor maximo de "<< maxPrice<<" : " << endl;
 }
 
-void f4(int d){
-    cout << "Digitado " << d << ", funcao 4 chamada" << endl;
+void showHardmob(string num){
+    cout << "Ultimas "<< num << " promocoes do forum Hardmob : " << endl;
 }
 
-void f5(int e){
-    cout << "Digitado " << e << ", funcao 5 chamada" << endl;
+void showAdrenaline(string num){
+    cout << "Ultimas "<< num << " promocoes do forum Adrenaline : " << endl;
 }

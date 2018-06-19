@@ -14,7 +14,6 @@ int main(void)
         menu.askMenuOption();
         menu.callFunction();
         cout << "Pressione ENTER para continuar";
-        cin.ignore(1000,'\n'); // clear in stream
         cin.get(); // press enter to continue
         clearScreen();
     }
