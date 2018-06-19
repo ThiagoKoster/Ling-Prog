@@ -18,8 +18,17 @@ our @EXPORT = qw(
     searchNameInMatrix
     searchPriceInMatrix
     searchPriceRangeInMatrix
+    helloWorld
 );
 our $VERSION = '0.01';
+
+#Test subrotine
+sub helloWorld
+{
+    return "Hello World";
+}
+
+
 
 #Searches for number os Responses ; If found includes it on promoMatrix at the correct position, and returns the string without it
 #int , string, $promoMatrixReference -> string 

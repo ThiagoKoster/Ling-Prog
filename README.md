@@ -15,5 +15,11 @@ Create "keys.txt" file in the project folder with the values of your ConsumerKey
 
 Baixar o curl:
 sudo apt-get install libcurl3 libcurl4-openssl-dev
-baixar biblioteca para json:
-sudo apt-get install nlohmann-json-dev 
+Baixar lperl
+sudo apt-get install libperl-dev
+
+
+compilar o perl
+g++ -o mainPerl PerlToCpp.cpp mainPerl.cpp `perl -MExtUtils::Embed -e ccopts -e ldopts`
+
+

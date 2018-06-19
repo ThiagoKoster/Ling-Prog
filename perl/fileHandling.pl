@@ -12,6 +12,12 @@ use constant{ # constants to make indexing promoMatrix easier
 
 #Subrotines
 
+#test subrotine
+sub helloWorld
+{
+    return "Hello World";
+}
+
 #Prints a matrix in promoMatrix format
 # matrix(promoMatrix format) -> void
 sub printMatrix
