@@ -4,7 +4,7 @@ class TwitterHandler
 {
     public:
         string GetAccessToken(string ,string);
-        string GetTweets();
+        string GetTweets(string);
         
     private:
 
