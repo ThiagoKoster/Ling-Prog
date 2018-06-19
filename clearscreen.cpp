@@ -1,9 +1,7 @@
 #if defined(_WIN32) // if windows
     #include <windows.h>
 #else // else = posix
-    #include <unistd.h>
-    #include <term.h>
-    #include <iostream>
+    #include <cstdlib>
 #endif
 
 void clearScreen(){
@@ -42,12 +40,6 @@ void clearScreen(){
         /* Move the cursor home */
         SetConsoleCursorPosition( hStdOut, homeCoords );
     #else
-        if (!cur_term)
-        {
-        int result;
-        setupterm( NULL, STDOUT_FILENO, &result );
-        if (result <= 0) return;
-        }
-        putp( tigetstr( "clear" ) );
+        system("clear");
     #endif
 }

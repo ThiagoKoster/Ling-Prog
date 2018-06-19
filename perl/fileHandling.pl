@@ -266,7 +266,7 @@ sub findMostInColumn
 
 
 ######## test area #########
-my @promoMatrix = generatePromoMatrix("posts.html");
+my @promoMatrix = generatePromoMatrix("posts.txt");
 printMatrix(@promoMatrix);
 
 my @matrix = searchNameInMatrix("samsung",PRODUCT,@promoMatrix);

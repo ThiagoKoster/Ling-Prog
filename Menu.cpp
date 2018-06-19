@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <string>
 #include "Menu.h"
 
 using namespace std;
@@ -32,5 +33,21 @@ int Menu::getMenuOption() const {
 }
 
 void Menu::callFunction() const{
+
+    switch(menuOption){
+        case 0:
+            (*functions[menuOption])(menuOption);
+        case 1:
+            (*functions[menuOption])(menuOption);
+        case 2:
+            cout << "Entre a loja a ser pesquisada : ";
+            
+        case 3:
+
+        case 4:
+
+        case 5:
+
+    }
     (*functions[menuOption])(menuOption);
 }
