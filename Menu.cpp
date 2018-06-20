@@ -1,10 +1,16 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include "Menu.h"
+#include "libs/Menu.h"
+#include "libs/TwitterHandler.h"
+
 
 using namespace std;
 
+static const string consumerKey = "idNDUtlKDmWG0TPC0Hnp9MQmJ";  
+static const string consumerSecret = "MIL5EPvTickAVPifHXgsEfIBOnskatFIEooiWZZBjMrvLMVSsw";
+ 
+   
 void Menu::printMenu () const{
     cout << "######################### Menu #########################" << endl;
     cout << "1 - Promocoes mais recentes " << endl;
@@ -18,7 +24,7 @@ void Menu::printMenu () const{
 }
 
 
-void Menu::askMenuOption(){
+void Menu:: askMenuOption(){
     cout << "Escolha sua opcao : ";
     cin >> menuOption;
     while ( cin.fail() || menuOption > 6 || menuOption< 0){
@@ -34,7 +40,10 @@ int Menu::getMenuOption() const {
 }
 
 void Menu::callFunction() const{
+
     string functionArgument;
+    TwitterHandler twitterHandler(consumerKey,consumerSecret);
+    
     cin.ignore(1000,'\n'); // clear in stream
     switch(menuOption){
         case 0:
@@ -43,6 +52,9 @@ void Menu::callFunction() const{
         case 1:
             cout << "Quantas promocoes gostaria de visualizar? ";
             getline(cin,functionArgument);
+            twitterHandler.WriteAllTweets(functionArgument);
+            cout << "Ultimas " << functionArgument << " promocoes : "<< endl;
+            twitterHandler.ReadTweets(stoi(functionArgument));
             (*functions[menuOption-1])(functionArgument);
             break;
         case 2:
@@ -63,12 +75,19 @@ void Menu::callFunction() const{
         case 5:
             cout << "Quantas promocoes Hardmob gostaria de visualizar? ";
             getline(cin,functionArgument);
-            (*functions[menuOption-1])(functionArgument);
+            
+            twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(0,functionArgument));
+            cout << "Ultimas "<< functionArgument << " promocoes do forum Hardmob : " << endl;
+            twitterHandler.ReadTweets();
+            //(*functions[menuOption-1])(functionArgument);
             break;
         case 6:
             cout << "Quantas promocoes do Adrenaline gostaria de visualizar? ";
             getline(cin,functionArgument);
-            (*functions[menuOption-1])(functionArgument);
+            twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(1,functionArgument));
+            cout << "Ultimas "<< functionArgument << " promocoes do forum Adrenaline : " << endl;
+            twitterHandler.ReadTweets();
+            //(*functions[menuOption-1])(functionArgument);
             break;
         default:
             break;

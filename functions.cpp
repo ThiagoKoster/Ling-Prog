@@ -1,11 +1,14 @@
 #include <iostream>
 #include <string>
-#include "functions.h"
+#include "libs/functions.h"
+#include "libs/TwitterHandler.h"
 
 using namespace std;
 
+
+
 void showRecentPromotions(string num){
-    cout << "Ultimas " << num << " promocoes : "<< endl;
+    //Método todo realizado pelo c++
 }
 
 void searchProduct(string product){
@@ -21,9 +24,11 @@ void searchPrice(string maxPrice){
 }
 
 void showHardmob(string num){
-    cout << "Ultimas "<< num << " promocoes do forum Hardmob : " << endl;
+    //Método todo realizado pelo c++
+   
 }
 
 void showAdrenaline(string num){
-    cout << "Ultimas "<< num << " promocoes do forum Adrenaline : " << endl;
+    //Método todo realizado pelo c++
+    
 }
