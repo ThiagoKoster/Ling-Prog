@@ -140,7 +140,6 @@ void TwitterHandler::WriteAllTweets(string n)
 {
     string hardMobTweets;
     string adrenTweets;
-    int maxTweets = stoi(n);
 
     hardMobTweets = GetTweetsFromUser(0);
     adrenTweets = GetTweetsFromUser(1);
