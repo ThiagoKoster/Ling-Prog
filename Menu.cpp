@@ -59,17 +59,14 @@ void Menu::callFunction() const{
         case 2:
             cout << "Entre o produto a ser pesquisado : ";
             getline(cin,functionArgument);
-            (*perlFunctions[menuOption-2])(functionArgument);
             break;
         case 3:
             cout << "Entre a loja a ser pesquisada : ";
             getline(cin,functionArgument);
-            (*perlFunctions[menuOption-2])(functionArgument);
             break;
         case 4:
             cout << "Digite valor maximo: ";
             getline(cin,functionArgument);
-            (*perlFunctions[menuOption-2])(functionArgument);
             break;
         case 5:
             cout << "Quantas promocoes Hardmob gostaria de visualizar? ";

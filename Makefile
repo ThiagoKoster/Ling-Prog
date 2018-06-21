@@ -5,7 +5,7 @@ CPPFLAGS=-Wall -std=c++11
 LFLAGS=-lcurl
 
 #targets
-MAIN = main.o Menu.o functions.o clearscreen.o TwitterHandler.o Base64.o
+MAIN = main.o Menu.o clearscreen.o TwitterHandler.o Base64.o
 POSTS = posts.txt
 
 main: $(MAIN)
@@ -24,8 +24,6 @@ Base64.o: Base64.cpp
 
 Menu.o : Menu.cpp
 	$(CPP) $(CPPFLAGS) -c Menu.cpp
-functions.o : functions.cpp
-	$(CPP) $(CPPFLAGS) -c functions.cpp
 clearscreen.o : clearscreen.cpp
 	$(CPP) $(CPPFLAGS) -c clearscreen.cpp
 

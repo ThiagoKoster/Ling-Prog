@@ -1,4 +1,3 @@
-#include "functions.h"
 #include <string>
 
 class Menu{
@@ -10,6 +9,4 @@ class Menu{
         void callFunction() const;        
     private:
         int menuOption;
-        void (*perlFunctions[3])(string)= {searchProduct,searchStore,searchPrice};
-
 };

@@ -12,6 +12,7 @@ our @ISA = qw(Exporter);
 our %EXPORT_TAGS = ( 'all' => [ qw() ] );
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(
+    printMatrix
     generatePromoMatrix
     searchNameInMatrix
     searchPriceInMatrix
@@ -26,26 +27,23 @@ sub helloWorld
     return "Hello World";
 }
 
-
-
-#Searches for number os Responses ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string, $promoMatrixReference -> string 
-sub findResponses
+#Prints a matrix in promoMatrix format into a file of given name
+# matrixRef(promoMatrix format), string -> void
+sub printMatrix
 {
-    my($index,$row,$promoMatrixRef) = @_;
-    $row =~ /'.*?'\s(\d*)/;
-    $$promoMatrixRef[$index][RESPONSES] = $+;
-    return $row;
-}
+    my ($matrixRef,$fileName) = @_;
+    
+    my $table = Text::Table ->new("Id", "Loja", "Produto", "Preco");
 
-#Searches for number os views ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string, $promoMatrixReference -> string
-sub findViews
-{
-    my($index,$row,$promoMatrixRef) = @_;
-    $row =~ /'.*?'\s\d*\s(\d*)/;
-    $$promoMatrixRef[$index][VIEWS] = $+;
-    return $row;
+     for my $i (0 .. @$matrixRef)
+    {
+        $table->load(
+            [$$matrixRef[$i][0], $$matrixRef[$i][1], $$matrixRef[$i][2], $$matrixRef[$i][3]]
+        );
+    }
+    open(FILEHANDLER, '>', $fileName) or die $!;
+    print FILEHANDLER $table;
+    close (FILEHANDLER);
 }
 
 #Searches for id ; If found includes it on promoMatrix at the correct position, and returns the string without it
@@ -64,7 +62,7 @@ sub findIds
 sub findStores 
 {
     my ($index,$row,$promoMatrixRef) = @_;
-    $row =~ s/^\S*\s\'\[(.*?)\]|^\S*\s\'\((.*?)\)//i; 
+    $row =~ s/^\S*\s\"\[(.*?)\]|^\S*\s\"\((.*?)\)//i; 
     $$promoMatrixRef[$index][STORE] = $+;
     return $row;
 }
@@ -95,8 +93,6 @@ sub generatePromoMatrix
     my $count = 0 ;
     while(my $row = <$fileHandler>)
     {
-        $row = findViews($count,$row,\@promoMatrix); # \@promoMatrix = Reference to @promoMatrix
-        $row = findResponses($count,$row,\@promoMatrix);
         $row = findIds($count,$row,\@promoMatrix);
         $row = findStores($count, $row,\@promoMatrix);
         $row = findPrices($count,$row,\@promoMatrix);
@@ -118,12 +114,15 @@ sub replaceStoreNames
     my ($promoMatrixRef) = @_;
     my %stores = (
         'sub' => "Submarino",
+        'marino' => "Submarino",
         'amaz' => "Amazon",
         'frio' => "PontoFrio",
         'fast' => "FastShop",
         'rapi' => "FastShop",
+        'temp' => "ShopTime",
         'time' => "ShopTime",
         'luiza' => "Magazine Luiza",
+        'maga' => "Magazine Luiza",
         'bahia' => "Casas Bahia",
         'ricard' => "Ricardo Eletro",
         'barat' => "SouBarato",
@@ -145,49 +144,67 @@ sub replaceStoreNames
 
 #Subrotine to search for substrings in a matrix in a given column  
 #   returns a matrix(promoMatrix format) with rows that have the given name at given column
-# string, constant, matrix -> matrix
+# string, constant, matrixRef -> matrix
 sub searchNameInMatrix
 {
-    my ($name,$column, @matrix) = @_;
+    my ($name,$column, $matrixRef) = @_;
     my @auxMatrix;
     my $count = 0; 
-    for(my $index = 0; $index < @matrix; $index++ )
+    for(my $index = 0; $index < @$matrixRef; $index++ )
     {
-        if($matrix[$index][$column] =~ /($name)/gi) #global and case insensitive
+        if($$matrixRef[$index][$column] =~ /($name)/gi) #global and case insensitive
         {
-            $auxMatrix[$count] = $matrix[$index];
+            $auxMatrix[$count] = $$matrixRef[$index];
             ++$count;
         }
     }
     return @auxMatrix ;
 }
 
+sub searchStoreInMatrix
+{
+    my ($storeName) = @_;
+    my @auxMatrix = generatePromoMatrix("posts.txt");
+    @auxMatrix = searchNameInMatrix($storeName,STORE,\@auxMatrix);
+    printMatrix(\@auxMatrix,"storePromotions.txt");
+    return "storePromotions.txt";
+}
+
+sub searchProductInMatrix
+{
+    my ($productName) = @_;
+    my @auxMatrix = generatePromoMatrix("posts.txt");
+    @auxMatrix = searchNameInMatrix($productName,PRODUCT,\@auxMatrix);
+    printMatrix(\@auxMatrix,"productPromotions.txt");
+    return "productPromotions.txt";
+}
+
 #Subroutine to search for products higher or smaller than given price
 #   returns a matrix(promoMatrix format) with rows that meet the price option
-# float, int , matrix -> matrix
+# float, int , matrixRef -> matrix
 sub searchPriceInMatrix 
 {
-    my ($price,$option, @matrix) = @_ ; #option = 0 for <= | option = 1 for >=
+    my ($price,$option, $matrixRef) = @_ ; #option = 0 for <= | option = 1 for >=
     my @auxMatrix;
     my $count = 0;
     if ($option == 0)
     {
-        for(my $index = 0; $index < @matrix; $index++ )
+        for(my $index = 0; $index < @$matrixRef; $index++ )
         {
-            if($matrix[$index][PRICE] <= $price) 
+            if($$matrixRef[$index][PRICE] <= $price) 
             {
-                $auxMatrix[$count] = $matrix[$index];
+                $auxMatrix[$count] = $$matrixRef[$index];
                 ++$count;
             }
         }
     }
     elsif ($option == 1)
     {
-        for(my $index = 0; $index < @matrix; $index++ )
+        for(my $index = 0; $index < @$matrixRef; $index++ )
         {
-            if($matrix[$index][PRICE] >= $price) 
+            if($$matrixRef[$index][PRICE] >= $price) 
             {
-                $auxMatrix[$count] = $matrix[$index];
+                $auxMatrix[$count] = $$matrixRef[$index];
                 ++$count;
             }
         }
@@ -203,20 +220,22 @@ sub searchPriceInMatrix
 }
 
 #Subroutine to search for products in a price ranger
-# float, float , matrix -> matrix
+# float, float -> matrix
 sub searchPriceRangeInMatrix 
 {
-    my ($minPrice,$maxPrice,@matrix) = @_;
+    my ($minPrice,$maxPrice) = @_;
+    my @promoMatrix = generatePromoMatrix("posts.txt");
     my @auxMatrix;
     if( ($minPrice >= $maxPrice) | ($maxPrice < $minPrice) ) 
     {
-        print "ERROR: The price Range is wrong\n";
-        return 0;
+       # print "ERROR: The price Range is wrong\n";
+        return '0';
     }
     else
     {
-        @auxMatrix = searchPriceInMatrix($maxPrice,0,@matrix); # lower than max price
-        @auxMatrix = searchPriceInMatrix($minPrice,1,@auxMatrix); # higher than min price
-        return @auxMatrix;
+        @auxMatrix = searchPriceInMatrix($maxPrice,0,\@promoMatrix); # lower than max price
+        @auxMatrix = searchPriceInMatrix($minPrice,1,\@auxMatrix); # higher than min price
+        printMatrix(\@auxMatrix,"priceRangePromotions.txt");
+        return "priceRangePromotions.txt";
     }    
 }
