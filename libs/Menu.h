@@ -1,4 +1,3 @@
-#include "functions.h"
 #include <string>
 
 class Menu{
@@ -10,6 +9,6 @@ class Menu{
         void callFunction() const;        
     private:
         int menuOption;
-        void (*functions[6])(string)= {showRecentPromotions,searchProduct,searchStore,searchPrice,showHardmob,showAdrenaline};
+        
 
 };

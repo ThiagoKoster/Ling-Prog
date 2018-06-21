@@ -6,8 +6,6 @@ use constant{ # constants to make indexing promoMatrix easier
     STORE   => 1,
     PRODUCT => 2,
     PRICE   => 3,
-    RESPONSES => 4,
-    VIEWS => 5,
 };
 require Exporter;
 our @ISA = qw(Exporter);
@@ -30,25 +28,6 @@ sub helloWorld
 
 
 
-#Searches for number os Responses ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string, $promoMatrixReference -> string 
-sub findResponses
-{
-    my($index,$row,$promoMatrixRef) = @_;
-    $row =~ /'.*?'\s(\d*)/;
-    $$promoMatrixRef[$index][RESPONSES] = $+;
-    return $row;
-}
-
-#Searches for number os views ; If found includes it on promoMatrix at the correct position, and returns the string without it
-#int , string, $promoMatrixReference -> string
-sub findViews
-{
-    my($index,$row,$promoMatrixRef) = @_;
-    $row =~ /'.*?'\s\d*\s(\d*)/;
-    $$promoMatrixRef[$index][VIEWS] = $+;
-    return $row;
-}
 
 #Searches for id ; If found includes it on promoMatrix at the correct position, and returns the string without it
 #int , string, $promoMatrixReference -> string without Id
