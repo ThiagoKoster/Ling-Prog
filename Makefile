@@ -6,7 +6,7 @@ LFLAGS=-lcurl $(shell perl -MExtUtils::Embed -e ldopts)
 
 #targets
 MAIN = main.o Menu.o  clearscreen.o TwitterHandler.o Base64.o PerlToCpp.o 
-POSTS = posts.txt
+TEXTFILES = posts.txt priceRangePromotions.txt productPromotions.txt storePromotions.txt
 
 main: $(MAIN)
 	$(CPP) $(MAIN) -o main $(LFLAGS)
@@ -30,4 +30,4 @@ PerlToCpp.o : PerlToCpp.cpp
 clean:
 	rm -rf *.o
 	rm -rf main
-	rm -rf $(POSTS)
+	rm -rf $(TEXTFILES)

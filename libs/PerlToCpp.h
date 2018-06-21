@@ -13,6 +13,7 @@ class PerlToCpp {
         void  Interpreter();
         string searchProduct( string );
         string searchStore( string );
+        string searchPrice(string,string);
     private:
         PerlInterpreter *my_perl;
         char *my_argv[2];

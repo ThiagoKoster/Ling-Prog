@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include<string>
 
 #include "libs/PerlToCpp.h"
@@ -11,13 +12,24 @@ using namespace std;
 static const string consumerKey = "idNDUtlKDmWG0TPC0Hnp9MQmJ";  
 static const string consumerSecret = "MIL5EPvTickAVPifHXgsEfIBOnskatFIEooiWZZBjMrvLMVSsw";
 
+void printFile(string fileName)
+{
+    ifstream f(fileName);
+    if (f.is_open())
+        std::cout << f.rdbuf();
+}
+
 int main(void)
 { 
     Menu menu;
     TwitterHandler twitterHandler(consumerKey,consumerSecret);
     PerlToCpp perl("");
     perl.Interpreter();
+    
     string functionArgument;
+    string minPrice;
+    string maxPrice;
+    
     twitterHandler.WriteAllTweets("30");
 
     //clearScreen();
@@ -39,16 +51,19 @@ int main(void)
             case 2:
                 cout << "Entre o produto a ser pesquisado : ";
                 getline(cin,functionArgument);
-                cout << perl.searchProduct(functionArgument) << endl;           
+                printFile( perl.searchProduct(functionArgument));           
                 break;
             case 3:
                 cout << "Entre a loja a ser pesquisada : ";
                 getline(cin,functionArgument);
-                cout << perl.searchStore(functionArgument) << endl;
+                printFile( perl.searchStore(functionArgument));
                 break;
             case 4:
+                cout << "Digite valor minimo: ";
+                getline(cin,minPrice);
                 cout << "Digite valor maximo: ";
-                getline(cin,functionArgument);
+                getline(cin,maxPrice);
+                printFile( perl.searchPrice(minPrice,maxPrice));
                 
                 break;
             case 5:

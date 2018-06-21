@@ -72,3 +72,22 @@ string PerlToCpp::searchStore(string store)
 
     return output;
 }
+
+string PerlToCpp::searchPrice(string minPrice, string maxPrice)
+{
+    string output;
+    dSP;
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+    XPUSHs(sv_2mortal(newSVpv(minPrice.c_str(), minPrice.length())));
+    XPUSHs(sv_2mortal(newSVpv(maxPrice.c_str(), maxPrice.length())));
+    PUTBACK;
+    call_pv("searchPriceRangeInMatrix",G_SCALAR);
+    SPAGAIN;
+    output = POPp;
+    FREETMPS;
+    LEAVE;
+
+    return output;
+}
