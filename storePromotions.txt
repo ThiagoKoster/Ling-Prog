@@ -1,0 +1,17 @@
+Id  Loja      Produto                                                                                            Preco  
+  1 Submarino  Cosplay de GM - Cobertor com Mangas Cinza                                                         29,99  
+ 21 Submarino  Smart TV LG Ultra HD 43\" IPS 4K 43UJ6525 WebOS HDR Magic Mobile                                  1614   
+ 26 Submarino  TV LG 43\" 4K                                                                                     1799,99
+ 49 Submarino  Game - Halo Wars - XBOX 360 - R$9,90 https://t.co/8GZkrvA4GL"                                            
+ 52 Submarino  Mouse Logitech G302 daedalus prime                                                                79,00  
+ 54 Submarino  FarCry 5 - PS4                                                                                    121,49 
+ 55 Submarino Samsung Galaxy Note 8                                                                              2879   
+ 57 Submarino  Motorola Moto Z2 Play Ouro                                                                        1197,96
+ 63 Submarino  Samsung Galaxy S7 Edge                                                                            1604,61
+ 79 Submarino  Dragon Ball Fighterz PS4                                                                          129,59 
+ 82 Submarino  Smart TV LED 49\" LG 49sj8000 Ultra HD 4k com Conversor Digital 4 HDMI 3 https://t.co/Xjq79SZXCG"        
+ 83 Submarino LG 49sj8000 Ultra HD 4k r$ 2.789 no cartão sub em 1x https://t.co/ArxQlEezRC"                            
+ 95 Submarino   Moto Z2 Play 64GB                                                                                1226,83
+101 Submarino  Gravity Rush 2                                                                                    19,99  
+124 Submarino  Monitor Acer XB271HU                                                                              2999,99
+                                                                                                                        

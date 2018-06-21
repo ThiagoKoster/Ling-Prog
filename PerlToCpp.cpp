@@ -1,6 +1,7 @@
 #include <stddef.h>
-#include<string>
+#include <string>
 #include "libs/PerlToCpp.h"
+#include "perlxsi.c"
 
 using namespace std;
 
@@ -32,27 +33,40 @@ void PerlToCpp::Interpreter()
     char _MYARGV_NOTHING_NAME[] = "";
     char *my_argv[] = {static_cast<char*>(_MYARGV_NOTHING_NAME), static_cast<char*>(_MYARGV_PERL_MODULE_NAME)};
 
-    perl_parse(my_perl,0,2,my_argv,NULL);
+    perl_parse(my_perl, xs_init,2,my_argv,NULL);
     perl_run(my_perl);
 }
 
-string PerlToCpp::HelloWorld(string Func)
+string PerlToCpp::searchProduct(string product)
 {
+    string output;
     dSP;
     ENTER;
     SAVETMPS;
     PUSHMARK(SP);
-
-    string output;
-
+    XPUSHs(sv_2mortal(newSVpv(product.c_str(), product.length())));
     PUTBACK;
-
-    call_pv(Func.c_str(),G_SCALAR);
+    call_pv("searchProductInMatrix",G_SCALAR);
     SPAGAIN;
-
     output = POPp;
+    FREETMPS;
+    LEAVE;
 
+    return output;
+}
+
+string PerlToCpp::searchStore(string store)
+{
+    string output;
+    dSP;
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+    XPUSHs(sv_2mortal(newSVpv(store.c_str(), store.length())));
     PUTBACK;
+    call_pv("searchStoreInMatrix",G_SCALAR);
+    SPAGAIN;
+    output = POPp;
     FREETMPS;
     LEAVE;
 

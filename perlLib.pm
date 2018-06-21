@@ -1,6 +1,7 @@
 package perlLib;
 use strict;
 #use warnings;
+use Text::Table;
 use constant{ # constants to make indexing promoMatrix easier
     ID      => 0,
     STORE   => 1,
@@ -12,18 +13,17 @@ our @ISA = qw(Exporter);
 our %EXPORT_TAGS = ( 'all' => [ qw() ] );
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(
-    printMatrix
-    searchNameInMatrix
-    searchPriceRangeInMatrix
-    helloWorld
+        printMatrix
+        findIds
+        findStores
+        findPrices
+        generatePromoMatrix
+        searchProductInMatrix
+        searchNameInMatrix
+        searchStoreInMatrix
+        searchPriceRangeInMatrix
 );
 our $VERSION = '0.01';
-
-#Test subrotine
-sub helloWorld
-{
-    return "Hello World";
-}
 
 #Prints a matrix in promoMatrix format into a file of given name
 # matrixRef(promoMatrix format), string -> void

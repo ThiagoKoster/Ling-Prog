@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use Text::Table;
 use perlLib;
 use feature qw(switch say);
 use lib '/';

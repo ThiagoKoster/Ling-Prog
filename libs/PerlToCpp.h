@@ -10,8 +10,9 @@ class PerlToCpp {
     public:
         PerlToCpp(string);
         ~PerlToCpp();
-        void Interpreter();
-        string HelloWorld(string);
+        void  Interpreter();
+        string searchProduct( string );
+        string searchStore( string );
     private:
         PerlInterpreter *my_perl;
         char *my_argv[2];
