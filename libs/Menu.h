@@ -9,4 +9,5 @@ class Menu{
         void callFunction() const;        
     private:
         int menuOption;
+        
 };
