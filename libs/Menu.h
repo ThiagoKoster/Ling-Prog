@@ -10,6 +10,6 @@ class Menu{
         void callFunction() const;        
     private:
         int menuOption;
-        void (*functions[6])(string)= {showRecentPromotions,searchProduct,searchStore,searchPrice,showHardmob,showAdrenaline};
+        void (*perlFunctions[3])(string)= {searchProduct,searchStore,searchPrice};
 
 };

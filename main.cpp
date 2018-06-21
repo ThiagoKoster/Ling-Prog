@@ -8,14 +8,10 @@
 using namespace std;
 
 
-
-
 int main(void)
 { 
     
     Menu menu;
-    
-   
     
     clearScreen();
     while( menu.getMenuOption() != 0){

@@ -55,31 +55,28 @@ void Menu::callFunction() const{
             twitterHandler.WriteAllTweets(functionArgument);
             cout << "Ultimas " << functionArgument << " promocoes : "<< endl;
             twitterHandler.ReadTweets(stoi(functionArgument));
-            (*functions[menuOption-1])(functionArgument);
             break;
         case 2:
             cout << "Entre o produto a ser pesquisado : ";
             getline(cin,functionArgument);
-            (*functions[menuOption-1])(functionArgument);
+            (*perlFunctions[menuOption-2])(functionArgument);
             break;
         case 3:
             cout << "Entre a loja a ser pesquisada : ";
             getline(cin,functionArgument);
-            (*functions[menuOption-1])(functionArgument);
+            (*perlFunctions[menuOption-2])(functionArgument);
             break;
         case 4:
             cout << "Digite valor maximo: ";
             getline(cin,functionArgument);
-            (*functions[menuOption-1])(functionArgument);
+            (*perlFunctions[menuOption-2])(functionArgument);
             break;
         case 5:
             cout << "Quantas promocoes Hardmob gostaria de visualizar? ";
             getline(cin,functionArgument);
-            
             twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(0,functionArgument));
             cout << "Ultimas "<< functionArgument << " promocoes do forum Hardmob : " << endl;
             twitterHandler.ReadTweets();
-            //(*functions[menuOption-1])(functionArgument);
             break;
         case 6:
             cout << "Quantas promocoes do Adrenaline gostaria de visualizar? ";
@@ -87,7 +84,6 @@ void Menu::callFunction() const{
             twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(1,functionArgument));
             cout << "Ultimas "<< functionArgument << " promocoes do forum Adrenaline : " << endl;
             twitterHandler.ReadTweets();
-            //(*functions[menuOption-1])(functionArgument);
             break;
         default:
             break;
