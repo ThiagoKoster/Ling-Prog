@@ -1,11 +1,11 @@
 ################# Makefile #################
 #### flags
 CPP=g++
-CPPFLAGS=-Wall -std=c++11
-LFLAGS=-lcurl
+CPPFLAGS=-Wall -std=c++11 $(shell perl -MExtUtils::Embed -e ccopts)
+LFLAGS=-lcurl $(shell perl -MExtUtils::Embed -e ldopts)
 
 #targets
-MAIN = main.o Menu.o functions.o clearscreen.o TwitterHandler.o Base64.o
+MAIN = main.o Menu.o functions.o clearscreen.o TwitterHandler.o Base64.o PerlToCpp.o
 POSTS = posts.txt
 
 main: $(MAIN)
@@ -28,6 +28,9 @@ functions.o : functions.cpp
 	$(CPP) $(CPPFLAGS) -c functions.cpp
 clearscreen.o : clearscreen.cpp
 	$(CPP) $(CPPFLAGS) -c clearscreen.cpp
+
+PerlToCpp.o : PerlToCpp.cpp
+	$(CPP) $(CPPFLAGS) -c PerlToCpp.cpp
 
 clean:
 	rm -rf *.o

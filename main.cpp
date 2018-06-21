@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include<string>
-
+#include "libs/PerlToCpp.h"
 #include "libs/Menu.h"
 #include "libs/clearscreen.h"
 
@@ -26,5 +26,13 @@ int main(void)
         cin.get(); // press enter to continue
         clearScreen();
     }
+
+
+    PerlToCpp perlToCpp("");
+    perlToCpp.Interpreter();
+    
+    string out = perlToCpp.HelloWorld("helloWorld");
+    cout << out << endl;
+
     return 0;
 }
