@@ -19,6 +19,7 @@ our @EXPORT = qw(
         searchProductInMatrix
         searchStoreInMatrix
         searchPriceRangeInMatrix
+        searchStoreWithMorePromotions
 );
 our $VERSION = '0.01';
 
@@ -245,3 +246,36 @@ sub searchPriceRangeInMatrix
         return "priceRangePromotions.txt";
     }    
 }
+
+#subroutine to search the store with more promotions, returns the store name and the number of promotions
+#void -> int , string
+sub searchStoreWithMorePromotions
+{
+    my @promoMatrix = generatePromoMatrix("posts.txt");
+    my %storesHash;
+    for(my $count = 0; $count < @promoMatrix; $count++ )
+    {
+        if( exists($storesHash{$promoMatrix[$count][STORE]}))
+        {
+            $storesHash{$promoMatrix[$count][STORE]}++;
+        } 
+        else
+        {
+            $storesHash{$promoMatrix[$count][STORE]} = 1;
+        }
+    }
+
+    my $highestCount = 0;
+    my $storeWithHighetsCount;
+    foreach my $index ( keys %storesHash)
+    {
+        if (($index) and ($storesHash{$index} > $highestCount))
+        {
+            $highestCount = $storesHash{$index};
+            $storeWithHighetsCount = $index;
+        }
+    }
+
+    return ($storeWithHighetsCount,$highestCount);
+}
+

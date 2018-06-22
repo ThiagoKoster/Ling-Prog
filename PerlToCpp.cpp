@@ -91,3 +91,26 @@ string PerlToCpp::searchPrice(string minPrice, string maxPrice)
 
     return output;
 }
+
+string PerlToCpp::searchStoreWithMorePromotions(void)
+{
+    string storeName;
+    string numOfPromotions;
+    string output;
+    dSP;
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+    PUTBACK;
+    call_pv("searchStoreWithMorePromotions",G_ARRAY);
+    SPAGAIN;
+    numOfPromotions = POPp;
+    storeName = POPp;
+    FREETMPS;
+    LEAVE;
+    output.append(storeName);
+    output.append(" com ");
+    output.append(numOfPromotions);
+    output.append(" promoções");
+    return output;
+}

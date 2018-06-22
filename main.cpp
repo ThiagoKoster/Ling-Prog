@@ -48,10 +48,12 @@ int main(void)
     string functionArgument;
     string minPrice;
     string maxPrice;
+    string storeName;
+
     
     twitterHandler.WriteAllTweets("100");
 
-    //clearScreen();
+    clearScreen();
     while( menu.getMenuOption() != 0){
         menu.printMenu();
         menu.askMenuOption();
@@ -111,6 +113,11 @@ int main(void)
                     twitterHandler.ReadTweets();
                 }                
                 break;
+            case 7:
+                functionArgument = perl.searchStoreWithMorePromotions();
+                storeName = functionArgument.substr(0, functionArgument.find(' '));
+                cout << "A Loja com mais promoções é : " << functionArgument << endl; 
+                printFile( perl.searchStore(storeName));
             default:
                 break;
         }

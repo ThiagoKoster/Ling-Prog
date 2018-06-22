@@ -14,6 +14,7 @@ class PerlToCpp {
         string searchProduct( string );
         string searchStore( string );
         string searchPrice(string,string);
+        string searchStoreWithMorePromotions(void);
     private:
         PerlInterpreter *my_perl;
         char *my_argv[2];

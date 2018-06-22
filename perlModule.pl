@@ -9,4 +9,5 @@ use constant{ # constants to make indexing promoMatrix easier
     STORE   => 1,
     PRODUCT => 2,
     PRICE   => 3,
+    LINK    => 4,
 };
