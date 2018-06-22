@@ -7,6 +7,7 @@ use constant{ # constants to make indexing promoMatrix easier
     STORE   => 1,
     PRODUCT => 2,
     PRICE   => 3,
+    LINK    => 4,
 };
 require Exporter;
 our @ISA = qw(Exporter);
@@ -27,12 +28,12 @@ sub printMatrix
 {
     my ($matrixRef,$fileName) = @_;
     
-    my $table = Text::Table ->new("Id", "Loja", "Produto", "Preco");
+    my $table = Text::Table ->new("Id", "Loja", "Produto", "Preco","Link");
 
      for my $i (0 .. @$matrixRef)
     {
         $table->load(
-            [$$matrixRef[$i][0], $$matrixRef[$i][1], $$matrixRef[$i][2], $$matrixRef[$i][3]]
+            [$$matrixRef[$i][0], $$matrixRef[$i][1], $$matrixRef[$i][2], $$matrixRef[$i][3],$$matrixRef[$i][4]]
         );
     }
     open(FILEHANDLER, '>', $fileName) or die $!;
@@ -68,10 +69,19 @@ sub findPrices
     my ($index,$row,$promoMatrixRef) = @_;
     #$row =~ s/\.//;
     #$row =~ s/R\$\s*(\d+[,]?\d{1,2}|\d+\.\d{3}[,]?\d{1,2}|\d+\.\d{3}).+//;
-    $row =~ s/R\$\s*(\d+[.]?\d+[,]?\d{1,2}).+//; #searches for R$price and cuts it out of row
+    $row =~ s/R\$\s*(\d+[.]?\d+[,]?\d{1,2}).+//i; #searches for R$price and cuts it out of row
     my $price = $+ ; 
     $price =~ s/\.// ; # remove dots from price
     $$promoMatrixRef[$index][PRICE] = $price;
+    return $row;
+}
+
+sub findLink
+{
+    my ($index,$row,$promoMatrixRef) = @_;
+    $row =~ s/(\S*)"$//;
+    my $link = $+;
+    $$promoMatrixRef[$index][LINK] = $link;
     return $row;
 }
 
@@ -89,7 +99,9 @@ sub generatePromoMatrix
     {
         $row = findIds($count,$row,\@promoMatrix);
         $row = findStores($count, $row,\@promoMatrix);
+        $row = findLink($count,$row,\@promoMatrix);
         $row = findPrices($count,$row,\@promoMatrix);
+        
 
         my $product = $row; #after we exclude id,store and price from row all we have left is product
         $product =~ s/\s([\-]|por)\s$//i; # remove - and por at end of $product string
