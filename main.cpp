@@ -12,11 +12,30 @@ using namespace std;
 static const string consumerKey = "idNDUtlKDmWG0TPC0Hnp9MQmJ";  
 static const string consumerSecret = "MIL5EPvTickAVPifHXgsEfIBOnskatFIEooiWZZBjMrvLMVSsw";
 
+bool onlyDigits(const string &str){
+    for(unsigned i = 0;i < str.length();i++){
+        if(!isdigit(str[i])){
+            return false;
+        }
+    }
+    return true;
+}
 void printFile(string fileName)
 {
     ifstream f(fileName);
     if (f.is_open())
         std::cout << f.rdbuf();
+}
+
+bool checkInput(string &input){
+    while(!onlyDigits(input)){  //The input is valid?
+        cout << "Numero invalido, entre com apenas digitos. Tente novamente ou entre com \"exit\" para ir ao menu: ";
+        getline(cin,input);
+        if(input == "exit"){
+            return false;
+        }
+    }
+    return true;
 }
 
 int main(void)
@@ -30,7 +49,7 @@ int main(void)
     string minPrice;
     string maxPrice;
     
-    twitterHandler.WriteAllTweets("30");
+    twitterHandler.WriteAllTweets("100");
 
     //clearScreen();
     while( menu.getMenuOption() != 0){
@@ -44,9 +63,11 @@ int main(void)
             case 1:
                 cout << "Quantas promocoes gostaria de visualizar? ";
                 getline(cin,functionArgument);
-                twitterHandler.WriteAllTweets(functionArgument);
-                cout << "Ultimas " << functionArgument << " promocoes : "<< endl;
-                twitterHandler.ReadTweets(stoi(functionArgument));
+                if(checkInput(functionArgument)){
+                    twitterHandler.WriteAllTweets(functionArgument);
+                    cout << "Ultimas " << functionArgument << " promocoes : "<< endl;
+                    twitterHandler.ReadTweets(stoi(functionArgument));
+                }              
                 break;
             case 2:
                 cout << "Entre o produto a ser pesquisado : ";
@@ -61,24 +82,34 @@ int main(void)
             case 4:
                 cout << "Digite valor minimo: ";
                 getline(cin,minPrice);
+                if(!checkInput(minPrice)){
+                    break;
+                }
                 cout << "Digite valor maximo: ";
                 getline(cin,maxPrice);
-                printFile( perl.searchPrice(minPrice,maxPrice));
-                
+                if(!checkInput(maxPrice)){
+                    break;
+                }              
+                printFile( perl.searchPrice(minPrice,maxPrice));           
                 break;
             case 5:
                 cout << "Quantas promocoes Hardmob gostaria de visualizar? ";
                 getline(cin,functionArgument);
-                twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(0,functionArgument));
-                cout << "Ultimas "<< functionArgument << " promocoes do forum Hardmob : " << endl;
-                twitterHandler.ReadTweets();
+                if(checkInput(functionArgument)){
+                    twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(0,functionArgument));
+                    cout << "Ultimas "<< functionArgument << " promocoes do forum Hardmob : " << endl;
+                    twitterHandler.ReadTweets();
+                }
+               
                 break;
             case 6:
                 cout << "Quantas promocoes do Adrenaline gostaria de visualizar? ";
                 getline(cin,functionArgument);
-                twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(1,functionArgument));
-                cout << "Ultimas "<< functionArgument << " promocoes do forum Adrenaline : " << endl;
-                twitterHandler.ReadTweets();
+                if(checkInput(functionArgument)){
+                    twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(1,functionArgument));
+                    cout << "Ultimas "<< functionArgument << " promocoes do forum Adrenaline : " << endl;
+                    twitterHandler.ReadTweets();
+                }                
                 break;
             default:
                 break;

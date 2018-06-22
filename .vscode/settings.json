@@ -41,7 +41,9 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "valarray": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "cstdarg": "cpp",
+        "cinttypes": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }
