@@ -110,8 +110,14 @@ int main(void)
                 getline(cin,maxPrice);
                 if(!checkInput(maxPrice)){
                     break;
+                }
+                functionArgument = perl.searchPrice(minPrice,maxPrice);
+                if ( functionArgument[0] == '0'){
+                    cout << "Erro : Faixa de valores incorreta. Forneça valor minimo diferente e menor do que valor maximo" << endl;
+                }
+                else{
+                    printFile(functionArgument);           
                 }              
-                printFile( perl.searchPrice(minPrice,maxPrice));           
                 break;            
             case 7:
                 functionArgument = perl.searchStoreWithMorePromotions();

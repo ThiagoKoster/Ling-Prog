@@ -132,6 +132,7 @@ sub replaceStoreNames
         'rapi' => "FastShop",
         'temp' => "ShopTime",
         'time' => "ShopTime",
+        'kabum' => "Kabum",
         'luiza' => "Magazine Luiza",
         'maga' => "Magazine Luiza",
         'bahia' => "Casas Bahia",
