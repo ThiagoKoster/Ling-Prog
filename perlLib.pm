@@ -28,15 +28,20 @@ our $VERSION = '0.01';
 sub printMatrix
 {
     my ($matrixRef,$fileName) = @_;
-    
-    my $table = Text::Table ->new("Id", "Loja", "Produto", "Preco","Link");
+    my $table = "Nenhuma promoção encontrada.... (￣︵￣)\n";
 
-     for my $i (0 .. @$matrixRef)
+    if(@$matrixRef > 0)
     {
-        $table->load(
-            [$$matrixRef[$i][0], $$matrixRef[$i][1], $$matrixRef[$i][2], $$matrixRef[$i][3],$$matrixRef[$i][4]]
-        );
+        $table = Text::Table ->new("Id", "Loja", "Produto", "Preco","Link");
+
+        for my $i (0 .. @$matrixRef)
+        {
+            $table->load(
+                [$$matrixRef[$i][0], $$matrixRef[$i][1], $$matrixRef[$i][2], $$matrixRef[$i][3],$$matrixRef[$i][4]]
+            );
+        }
     }
+
     open(FILEHANDLER, '>', $fileName) or die $!;
     print FILEHANDLER $table;
     close (FILEHANDLER);

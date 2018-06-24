@@ -69,6 +69,7 @@ int main(void)
                     twitterHandler.WriteAllTweets(functionArgument);
                     cout << "Ultimas " << functionArgument << " promocoes : "<< endl;
                     twitterHandler.ReadTweets(stoi(functionArgument));
+                    twitterHandler.WriteAllTweets("100");
                 }              
                 break;
             case 2:
@@ -78,6 +79,7 @@ int main(void)
                     twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(0,functionArgument));
                     cout << "Ultimas "<< functionArgument << " promocoes do forum Hardmob : " << endl;
                     twitterHandler.ReadTweets();
+                    twitterHandler.WriteAllTweets("100");
                 }
                
                 break;
@@ -88,6 +90,7 @@ int main(void)
                     twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(1,functionArgument));
                     cout << "Ultimas "<< functionArgument << " promocoes do forum Adrenaline : " << endl;
                     twitterHandler.ReadTweets();
+                    twitterHandler.WriteAllTweets("100");
                 }    
                 break;           
             case 4:
