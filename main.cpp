@@ -72,16 +72,35 @@ int main(void)
                 }              
                 break;
             case 2:
+                cout << "Quantas promocoes Hardmob gostaria de visualizar? ";
+                getline(cin,functionArgument);
+                if(checkInput(functionArgument)){
+                    twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(0,functionArgument));
+                    cout << "Ultimas "<< functionArgument << " promocoes do forum Hardmob : " << endl;
+                    twitterHandler.ReadTweets();
+                }
+               
+                break;
+            case 3:
+                cout << "Quantas promocoes do Adrenaline gostaria de visualizar? ";
+                getline(cin,functionArgument);
+                if(checkInput(functionArgument)){
+                    twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(1,functionArgument));
+                    cout << "Ultimas "<< functionArgument << " promocoes do forum Adrenaline : " << endl;
+                    twitterHandler.ReadTweets();
+                }    
+                break;           
+            case 4:
                 cout << "Entre o produto a ser pesquisado : ";
                 getline(cin,functionArgument);
                 printFile( perl.searchProduct(functionArgument));           
                 break;
-            case 3:
+            case 5:
                 cout << "Entre a loja a ser pesquisada : ";
                 getline(cin,functionArgument);
                 printFile( perl.searchStore(functionArgument));
                 break;
-            case 4:
+            case 6:
                 cout << "Digite valor minimo: ";
                 getline(cin,minPrice);
                 if(!checkInput(minPrice)){
@@ -93,26 +112,7 @@ int main(void)
                     break;
                 }              
                 printFile( perl.searchPrice(minPrice,maxPrice));           
-                break;
-            case 5:
-                cout << "Quantas promocoes Hardmob gostaria de visualizar? ";
-                getline(cin,functionArgument);
-                if(checkInput(functionArgument)){
-                    twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(0,functionArgument));
-                    cout << "Ultimas "<< functionArgument << " promocoes do forum Hardmob : " << endl;
-                    twitterHandler.ReadTweets();
-                }
-               
-                break;
-            case 6:
-                cout << "Quantas promocoes do Adrenaline gostaria de visualizar? ";
-                getline(cin,functionArgument);
-                if(checkInput(functionArgument)){
-                    twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(1,functionArgument));
-                    cout << "Ultimas "<< functionArgument << " promocoes do forum Adrenaline : " << endl;
-                    twitterHandler.ReadTweets();
-                }                
-                break;
+                break;            
             case 7:
                 functionArgument = perl.searchStoreWithMorePromotions();
                 storeName = functionArgument.substr(0, functionArgument.find(' '));

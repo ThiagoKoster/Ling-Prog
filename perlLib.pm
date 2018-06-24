@@ -70,9 +70,10 @@ sub findPrices
     my ($index,$row,$promoMatrixRef) = @_;
     #$row =~ s/\.//;
     #$row =~ s/R\$\s*(\d+[,]?\d{1,2}|\d+\.\d{3}[,]?\d{1,2}|\d+\.\d{3}).+//;
-    $row =~ s/R\$\s*(\d+[.]?\d+[,]?\d{1,2}).+//i; #searches for R$price and cuts it out of row
+    $row =~ s/R\$\s*(\d+[.]?\d+[,]?\d{1,2}|\d+[,]?\d{1,2})//i; #searches for R$price and cuts it out of row
     my $price = $+ ; 
     $price =~ s/\.// ; # remove dots from price
+    $price =~ s/^\s+|\s+$//g; #remove white space from price
     $$promoMatrixRef[$index][PRICE] = $price;
     return $row;
 }
@@ -82,6 +83,7 @@ sub findLink
     my ($index,$row,$promoMatrixRef) = @_;
     $row =~ s/(\S*)"$//;
     my $link = $+;
+    $link =~ s/^\s+|\s+$//g; #remove spaces at end and beginning of string
     $$promoMatrixRef[$index][LINK] = $link;
     return $row;
 }
@@ -106,6 +108,7 @@ sub generatePromoMatrix
 
         my $product = $row; #after we exclude id,store and price from row all we have left is product
         $product =~ s/\s([\-]|por)\s$//i; # remove - and por at end of $product string
+        $product =~ s/^\s+|\s+$//g; #remove spaces at end and beginning of string
         $promoMatrix[$count][PRODUCT] = $product;
         ++$count ;
     }
@@ -123,6 +126,7 @@ sub replaceStoreNames
         'sub' => "Submarino",
         'marino' => "Submarino",
         'amaz' => "Amazon",
+        'america' => "Americanas",
         'frio' => "PontoFrio",
         'fast' => "FastShop",
         'rapi' => "FastShop",
@@ -276,6 +280,6 @@ sub searchStoreWithMorePromotions
         }
     }
 
-    return ($storeWithHighetsCount,$highestCount);
+    return ($storeWithHighetsCount,$storesHash{$storeWithHighetsCount});
 }
 

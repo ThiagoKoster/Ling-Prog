@@ -7,12 +7,12 @@ using namespace std;
    
 void Menu::printMenu () const{
     cout << "######################### Menu #########################" << endl;
-    cout << "1 - Promocoes mais recentes " << endl;
-    cout << "2 - Pesquisar promocoes por nome de produto " << endl;
-    cout << "3 - Pesquisar promocoes por loja " << endl;
-    cout << "4 - Pesquisar promocoes por preco " << endl;
-    cout << "5 - Promocoes do forum Hardmob" << endl;
-    cout << "6 - Promocoes do forum Adrenaline" << endl;
+    cout << "1 - Mostrar promoções mais recentes " << endl;
+    cout << "2 - Mostrar promoções do forum Hardmob" << endl;
+    cout << "3 - Mostrar promoções do forum Adrenaline" << endl;
+    cout << "4 - Pesquisar promocoes por nome de produto " << endl;
+    cout << "5 - Pesquisar promocoes por loja " << endl;
+    cout << "6 - Pesquisar promocoes por preco " << endl;
     cout << "7 - Mostar Loja com mais promoções" << endl;
     cout << "0 - Sair do programa" << endl;
     cout << "######################### Menu #########################" << endl;
