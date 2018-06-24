@@ -50,10 +50,11 @@ int main(void)
     string maxPrice;
     string storeName;
 
-    
-    twitterHandler.WriteAllTweets("100");
+    cout << "Carregando Promocoes..." << endl;
+    twitterHandler.WriteAllTweets();
 
     clearScreen();
+    
     while( menu.getMenuOption() != 0){
         menu.printMenu();
         menu.askMenuOption();
@@ -66,10 +67,10 @@ int main(void)
                 cout << "Quantas promocoes gostaria de visualizar? ";
                 getline(cin,functionArgument);
                 if(checkInput(functionArgument)){
-                    twitterHandler.WriteAllTweets(functionArgument);
+                    twitterHandler.WriteAllTweets();
                     cout << "Ultimas " << functionArgument << " promocoes : "<< endl;
                     twitterHandler.ReadTweets(stoi(functionArgument));
-                    twitterHandler.WriteAllTweets("100");
+                    twitterHandler.WriteAllTweets();
                 }              
                 break;
             case 2:
@@ -79,7 +80,7 @@ int main(void)
                     twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(0,functionArgument));
                     cout << "Ultimas "<< functionArgument << " promocoes do forum Hardmob : " << endl;
                     twitterHandler.ReadTweets();
-                    twitterHandler.WriteAllTweets("100");
+                    twitterHandler.WriteAllTweets();
                 }
                
                 break;
@@ -90,7 +91,7 @@ int main(void)
                     twitterHandler.WritePromoFile(twitterHandler.GetTweetsFromUser(1,functionArgument));
                     cout << "Ultimas "<< functionArgument << " promocoes do forum Adrenaline : " << endl;
                     twitterHandler.ReadTweets();
-                    twitterHandler.WriteAllTweets("100");
+                    twitterHandler.WriteAllTweets();
                 }    
                 break;           
             case 4:

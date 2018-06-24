@@ -136,7 +136,7 @@ string TwitterHandler::GetTweetsFromUser(int storeCode, string numberOfTweets = 
     return readBuffer;
 }
 
-void TwitterHandler::WriteAllTweets(string n)
+void TwitterHandler::WriteAllTweets()
 {
     string hardMobTweets;
     string adrenTweets;
