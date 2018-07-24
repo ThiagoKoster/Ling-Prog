@@ -9,8 +9,8 @@
 
 using namespace std;
 
-static const string consumerKey = "idNDUtlKDmWG0TPC0Hnp9MQmJ";  
-static const string consumerSecret = "MIL5EPvTickAVPifHXgsEfIBOnskatFIEooiWZZBjMrvLMVSsw";
+static const string consumerKey = "use your consumerKey here";  
+static const string consumerSecret = "use your consumerSecret here";
 
 bool onlyDigits(const string &str){
     for(unsigned i = 0;i < str.length();i++){
